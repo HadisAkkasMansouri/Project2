@@ -1,7 +1,7 @@
 package ir.dotin.server.business;
 
 import ir.dotin.bean.Deposite;
-import ir.dotin.bean.Responsetype;
+import ir.dotin.bean.ResponseType;
 import ir.dotin.bean.Transaction;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -70,11 +70,12 @@ public class ServerHandler implements Runnable {
                     Socket socket = serverSocket.accept();
                     ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
                     while ((transaction = (Transaction) ois.readObject()) != null) {
-                        validation.validateTransaction(transaction);
+                        validation.validateTransaction((Transaction) transaction);
+
                         ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-                        for (Deposite deposite : depositeList){
+//                        for (Deposite deposite : depositeList){
                             oos.writeObject(transaction);
-                        }
+//                        }
                     }
                 } catch (Exception e) {
                     logger.severe(e.getMessage());
@@ -90,7 +91,7 @@ public class ServerHandler implements Runnable {
     public void doWithdrawTransaction(Deposite deposite, Transaction transaction) {
         int withdrawamount;
         withdrawamount = deposite.getInitalBalance() - transaction.getAmount();
-        transaction.setResponseCode(String.valueOf(Responsetype.SUCCESS));
+        transaction.setResponseCode(String.valueOf(ResponseType.SUCCESS));
         deposite.setInitalBalance(withdrawamount);
         logger.info("The transaction of " + transaction.getTransactionType() + " with amount of " + transaction.getAmount() + " is done successfully!");
     }
@@ -98,7 +99,7 @@ public class ServerHandler implements Runnable {
     public void doDepositTransaction(Deposite deposite, Transaction transaction) {
         int depositAmount;
         depositAmount = deposite.getInitalBalance() + transaction.getAmount();
-        transaction.setResponseCode(String.valueOf(Responsetype.SUCCESS));
+        transaction.setResponseCode(String.valueOf(ResponseType.SUCCESS));
         deposite.setInitalBalance(depositAmount);
         logger.info("The transaction of " + transaction.getTransactionType() + " with amount of " + transaction.getAmount() + " is done successfully!");
     }
