@@ -1,6 +1,10 @@
 package ir.dotin.bean;
 
+
 public enum ResponseCode {
-    DEPOSIT,
-    WITHDRAW;
+
+    SUCCESS,
+    INADEQUATE_AMOUNT,
+    UPPER_BOUND,
+    INVALID_TRANSACTION;
 }
