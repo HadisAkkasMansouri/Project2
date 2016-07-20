@@ -1,7 +1,7 @@
 package ir.dotin.server.business;
 
 import ir.dotin.bean.Deposite;
-import ir.dotin.bean.Responsetype;
+import ir.dotin.bean.ResponseType;
 import ir.dotin.bean.Transaction;
 import ir.dotin.bean.TransactionType;
 import java.util.List;
@@ -17,7 +17,7 @@ public class RequestValidation {
 
         List<Deposite> depositeList = serverHandler.readJSONFile();
         if ((!transaction.getTransactionType().equalsIgnoreCase(TransactionType.DEPOSIT.toString())) && (!transaction.getTransactionType().equalsIgnoreCase(TransactionType.WITHDRAW.toString()))) {
-            transaction.setResponseCode(String.valueOf(Responsetype.INVALID_TRANSACTION));
+            transaction.setResponseCode(String.valueOf(ResponseType.INVALID_TRANSACTION));
             logger.severe("The transaction is not recognised !");
             return false;
         }
@@ -37,7 +37,7 @@ public class RequestValidation {
             }
         }
         if (!flag){
-            transaction.setResponseCode(String.valueOf(Responsetype.UNDEFINED_DEPOSIT));
+            transaction.setResponseCode(String.valueOf(ResponseType.UNDEFINED_DEPOSIT));
             logger.severe("The deposit Id of : " + transaction.getDepositId() + " is invalid !!!");
         }
         return false;
@@ -46,7 +46,7 @@ public class RequestValidation {
     public boolean validateDeposit (Transaction transaction,Deposite deposite){
 
             if((transaction.getAmount() > deposite.getUpperBound()) || ((transaction.getAmount() + deposite.getInitalBalance()) > deposite.getUpperBound())){
-                transaction.setResponseCode(String.valueOf(Responsetype.UPPER_BOUND));
+                transaction.setResponseCode(String.valueOf(ResponseType.UPPER_BOUND));
                 logger.warning("The transaction amount is more than defined UpperBound !!!");
                 return false;
             }else{
@@ -58,7 +58,7 @@ public class RequestValidation {
     public boolean validateWithdraw (Transaction transaction, Deposite deposite){
 
             if (transaction.getAmount() > deposite.getInitalBalance()) {
-                transaction.setResponseCode(String.valueOf(Responsetype.INADEQUATE_AMOUNT));
+                transaction.setResponseCode(String.valueOf(ResponseType.INADEQUATE_AMOUNT));
                 logger.warning("The balance is not adequate!!!");
                 return false;
             }else{
