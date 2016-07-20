@@ -11,6 +11,7 @@ public class Transaction implements Serializable{
     private int depositId;
     private String responseCode;
 
+
     public int getTransactionId() {
         return transactionId;
     }
