@@ -1,7 +1,7 @@
 package ir.dotin.terminal.business;
 
 import com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl;
-import ir.dotin.bean.ResponseCode;
+import ir.dotin.bean.Responsetype;
 import ir.dotin.bean.Transaction;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
@@ -134,22 +134,29 @@ public class TerminalHandler implements Runnable{
 
 
         Element responseCode = document.createElement("responseCode");
-            if(transaction.getResponseCode().equals(ResponseCode.SUCCESS)){
+        Element description = document.createElement("description");
+            if(transaction.getResponseCode().equals(Responsetype.SUCCESS)){
                 responseCode.appendChild(document.createTextNode("00"));
+                description.appendChild(document.createTextNode("Successful Transaction"));
             }
-            else if(transaction.getResponseCode().equals(ResponseCode.UPPER_BOUND)){
+            else if(transaction.getResponseCode().equals(Responsetype.UPPER_BOUND)){
                 responseCode.appendChild(document.createTextNode("61"));
+                description.appendChild(document.createTextNode("UpperBound Transaction Amount"));
             }
-            else if(transaction.getResponseCode().equals(ResponseCode.INADEQUATE_AMOUNT)) {
+            else if(transaction.getResponseCode().equals(Responsetype.INADEQUATE_AMOUNT)) {
                 responseCode.appendChild(document.createTextNode("51"));
+                description.appendChild(document.createTextNode("Inadequate Transaction Amount"));
             }
-            else if(transaction.getResponseCode().equals(ResponseCode.INVALID_TRANSACTION)) {
+            else if(transaction.getResponseCode().equals(Responsetype.INVALID_TRANSACTION)) {
                 responseCode.appendChild(document.createTextNode("12"));
+                description.appendChild(document.createTextNode("Invalid Transaction"));
             }
-            else if(transaction.getResponseCode().equals(ResponseCode.UNDEFINED_DEPOSIT)) {
+            else if(transaction.getResponseCode().equals(Responsetype.UNDEFINED_DEPOSIT)) {
                 responseCode.appendChild(document.createTextNode("79"));
+                description.appendChild(document.createTextNode("Undefined transaction"));
             }
-             element.appendChild(responseCode);
+        element.appendChild(responseCode);
+        element.appendChild(description);
 
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
