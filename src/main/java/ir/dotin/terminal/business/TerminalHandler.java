@@ -169,6 +169,7 @@ public class TerminalHandler implements Runnable{
             StreamResult result = new StreamResult(new File("src\\main\\resources\\response.xml"));
             transformer.transform(source, result);
             logger.info("Response file is saved!");
+
         } catch (Exception e) {
             e.printStackTrace();
         }
