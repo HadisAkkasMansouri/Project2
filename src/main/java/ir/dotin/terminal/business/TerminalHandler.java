@@ -81,6 +81,8 @@ public class TerminalHandler implements Runnable{
     public void run() {
         String ip = terminal.getIp();
         String port = terminal.getPort();
+        List<Terminal> transactionList = new ArrayList<Terminal>();
+
         try{
             logger.info("*************Sending to Server*************");
             Socket socket = new Socket(ip, Integer.parseInt(port));
@@ -156,9 +158,6 @@ public class TerminalHandler implements Runnable{
             else if(transaction.getResponseCode().equalsIgnoreCase(ResponseType.UNDEFINED_DEPOSIT.toString())) {
                 responseCode.appendChild(document.createTextNode("79"));
                 description.appendChild(document.createTextNode("Undefined transaction"));
-            }else {
-                responseCode.appendChild(document.createTextNode("**"));
-                description.appendChild(document.createTextNode("**"));
             }
         element.appendChild(responseCode);
         element.appendChild(description);

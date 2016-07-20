@@ -51,6 +51,7 @@ public class Terminal {
     public void setOutLogPath(String outLogPath) {
         this.outLogPath = outLogPath;
     }
+
     public List<Transaction> getTransactionList(){
         return transactionList;
     }
