@@ -1,7 +1,7 @@
 package ir.dotin.bean;
 
 
-public enum Responsetype {
+public enum ResponseType {
 
     SUCCESS,
     INADEQUATE_AMOUNT,

@@ -1,6 +1,0 @@
-Jul 20, 2016 11:16:40 AM ir.dotin.server.business.MainServer main
-INFO: *************Server is started*************
-Jul 20, 2016 11:16:40 AM ir.dotin.server.business.ServerHandler run
-INFO: Server is Listening on the port : 9090
-Jul 20, 2016 11:16:45 AM ir.dotin.server.business.ServerHandler doDepositTransaction
-INFO: The transaction of deposit with amount of 3000 is done successfully!
