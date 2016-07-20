@@ -1,7 +1,7 @@
 package ir.dotin.terminal.business;
 
 import com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl;
-import ir.dotin.bean.Responsetype;
+import ir.dotin.bean.ResponseType;
 import ir.dotin.bean.Transaction;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
@@ -82,21 +82,23 @@ public class TerminalHandler implements Runnable{
         String ip = terminal.getIp();
         String port = terminal.getPort();
         try{
-            Socket socket = new Socket(ip, Integer.parseInt(port));
-            ObjectOutputStream socketOut = new ObjectOutputStream(socket.getOutputStream());
-            for (Transaction transaction : terminal.getTransactionList()) {
-                socketOut.writeObject(transaction);
-            }
             logger.info("*************Sending to Server*************");
-            DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
+            Socket socket = new Socket(ip, Integer.parseInt(port));
+            ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
+            for (Transaction transaction : terminal.getTransactionList()) {
+                outputStream.writeObject(transaction);
+            }
+
+            logger.info("*************Received from Server*************");
+            ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
+            createResponseXML((Transaction) inputStream.readObject());
             boolean stop = true;
             String temp;
-            logger.info("*************Received from Server*************");
             while (stop){
                 for (Transaction transaction : terminal.getTransactionList()) {
-                    System.out.println(dataInputStream.readUTF());
+                    System.out.println(inputStream.readUTF());
                 }
-               temp = String.valueOf(dataInputStream);
+               temp = String.valueOf(inputStream);
                 if(temp.compareToIgnoreCase("END") == 0){
                     stop = false;
                 }
@@ -135,33 +137,36 @@ public class TerminalHandler implements Runnable{
 
         Element responseCode = document.createElement("responseCode");
         Element description = document.createElement("description");
-            if(transaction.getResponseCode().equals(Responsetype.SUCCESS)){
+            if(transaction.getResponseCode().equalsIgnoreCase(ResponseType.SUCCESS.toString())){
                 responseCode.appendChild(document.createTextNode("00"));
                 description.appendChild(document.createTextNode("Successful Transaction"));
             }
-            else if(transaction.getResponseCode().equals(Responsetype.UPPER_BOUND)){
+            else if(transaction.getResponseCode().equalsIgnoreCase(ResponseType.UPPER_BOUND.toString())){
                 responseCode.appendChild(document.createTextNode("61"));
                 description.appendChild(document.createTextNode("UpperBound Transaction Amount"));
             }
-            else if(transaction.getResponseCode().equals(Responsetype.INADEQUATE_AMOUNT)) {
+            else if(transaction.getResponseCode().equalsIgnoreCase(ResponseType.INADEQUATE_AMOUNT.toString())) {
                 responseCode.appendChild(document.createTextNode("51"));
                 description.appendChild(document.createTextNode("Inadequate Transaction Amount"));
             }
-            else if(transaction.getResponseCode().equals(Responsetype.INVALID_TRANSACTION)) {
+            else if(transaction.getResponseCode().equalsIgnoreCase(ResponseType.INVALID_TRANSACTION.toString())) {
                 responseCode.appendChild(document.createTextNode("12"));
                 description.appendChild(document.createTextNode("Invalid Transaction"));
             }
-            else if(transaction.getResponseCode().equals(Responsetype.UNDEFINED_DEPOSIT)) {
+            else if(transaction.getResponseCode().equalsIgnoreCase(ResponseType.UNDEFINED_DEPOSIT.toString())) {
                 responseCode.appendChild(document.createTextNode("79"));
                 description.appendChild(document.createTextNode("Undefined transaction"));
+            }else {
+                responseCode.appendChild(document.createTextNode("**"));
+                description.appendChild(document.createTextNode("**"));
             }
         element.appendChild(responseCode);
         element.appendChild(description);
 
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
-            DOMSource source = new DOMSource();
-            StreamResult result = new StreamResult(new File("src\\main\\resources"));
+            DOMSource source = new DOMSource(document);
+            StreamResult result = new StreamResult(new File("src\\main\\resources\\response.xml"));
             transformer.transform(source, result);
             logger.info("Response file is saved!");
         } catch (Exception e) {
