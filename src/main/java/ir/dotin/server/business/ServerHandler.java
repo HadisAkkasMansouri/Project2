@@ -1,7 +1,7 @@
 package ir.dotin.server.business;
 
 import ir.dotin.bean.Deposite;
-import ir.dotin.bean.ResponseCode;
+import ir.dotin.bean.Responsetype;
 import ir.dotin.bean.Transaction;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -90,7 +90,7 @@ public class ServerHandler implements Runnable {
     public void doWithdrawTransaction(Deposite deposite, Transaction transaction) {
         int withdrawamount;
         withdrawamount = deposite.getInitalBalance() - transaction.getAmount();
-        transaction.setResponseCode(String.valueOf(ResponseCode.SUCCESS));
+        transaction.setResponseCode(String.valueOf(Responsetype.SUCCESS));
         deposite.setInitalBalance(withdrawamount);
         logger.info("The transaction of " + transaction.getTransactionType() + " with amount of " + transaction.getAmount() + " is done successfully!");
     }
@@ -98,7 +98,7 @@ public class ServerHandler implements Runnable {
     public void doDepositTransaction(Deposite deposite, Transaction transaction) {
         int depositAmount;
         depositAmount = deposite.getInitalBalance() + transaction.getAmount();
-        transaction.setResponseCode(String.valueOf(ResponseCode.SUCCESS));
+        transaction.setResponseCode(String.valueOf(Responsetype.SUCCESS));
         deposite.setInitalBalance(depositAmount);
         logger.info("The transaction of " + transaction.getTransactionType() + " with amount of " + transaction.getAmount() + " is done successfully!");
     }
