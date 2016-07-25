@@ -3,8 +3,6 @@ package ir.dotin.server.business;
 import ir.dotin.shared.ResponseType;
 import ir.dotin.shared.Transaction;
 import ir.dotin.shared.TransactionType;
-import org.json.simple.JSONObject;
-
 import java.util.List;
 import java.util.logging.Logger;
 
