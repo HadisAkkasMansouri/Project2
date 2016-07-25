@@ -3,6 +3,8 @@ package ir.dotin.server.business;
 import ir.dotin.shared.ResponseType;
 import ir.dotin.shared.Transaction;
 import ir.dotin.shared.TransactionType;
+import org.json.simple.JSONObject;
+
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -10,12 +12,12 @@ public class TransactionAccomplishment {
 
 
     Logger logger = Logger.getLogger("Validation Log");
-    ServerHandler serverHandler = new ServerHandler();
+    ServerInfo info = new ServerInfo();
     ResponseTransaction responseTransaction = null;
 
     public ResponseTransaction readTransaction(Transaction transaction) {
 
-        List<Deposit> depositList = serverHandler.readJSONFile();
+        List<Deposit> depositList = ServerInfo.fromJson().getDeposits();
         if ((!transaction.getTransactionType().equalsIgnoreCase(TransactionType.DEPOSIT.toString())) && (!transaction.getTransactionType().equalsIgnoreCase(TransactionType.WITHDRAW.toString()))) {
             transaction.setResponseType(ResponseType.INVALID_TRANSACTION);
             responseTransaction = new ResponseTransaction(transaction.getTransactionId(), transaction.getResponseType(), transaction.getAmount(), "Invalid Transaction");
