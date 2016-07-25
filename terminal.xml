@@ -1,9 +1,9 @@
 <terminal id="21374" type="ATM">
-<server ip="127.0.0.1" port="9090"/>
-<outLog path="term21374.log"/>
-<transactions>
-    <transaction id="1" type="deposit" amount="3000" deposit="33227781"/>
-    <transaction id="2" type="withdraw" amount="10000" deposit="35527439"/>
-    <transaction id="3" type="deposit" amount="2000000" deposit="33227781"/>
-</transactions>
+    <server ip="127.0.0.1" port="9090"/>
+    <outLog path="term21374.log"/>
+    <transactions>
+        <transaction id="1" type="deposit" amount="3000" deposit="33227781"/>
+        <transaction id="2" type="withdraw" amount="10000" deposit="35527439"/>
+        <transaction id="3" type="deposit" amount="2000000" deposit="33227781"/>
+    </transactions>
 </terminal>

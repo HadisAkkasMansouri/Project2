@@ -1,20 +1,4 @@
-Jul 20, 2016 4:34:37 PM ir.dotin.server.business.MainServer main
+Jul 25, 2016 10:48:32 AM ir.dotin.server.business.ServerMultiThreading main
 INFO: *************Server is started*************
-Jul 20, 2016 4:34:37 PM ir.dotin.server.business.ServerHandler run
+Jul 25, 2016 10:49:10 AM ir.dotin.server.business.ServerMultiThreading run
 INFO: Server is Listening on the port : 9090
-Jul 20, 2016 4:34:39 PM ir.dotin.server.business.ServerHandler doDepositTransaction
-INFO: The transaction of deposit with amount of 3000 is done successfully!
-Jul 20, 2016 4:34:39 PM ir.dotin.server.business.ServerHandler run
-SEVERE: Connection reset
-Jul 20, 2016 4:38:12 PM ir.dotin.server.business.ServerHandler doDepositTransaction
-INFO: The transaction of deposit with amount of 3000 is done successfully!
-Jul 20, 2016 4:38:13 PM ir.dotin.server.business.ServerHandler run
-SEVERE: Connection reset
-Jul 20, 2016 4:38:14 PM ir.dotin.server.business.ServerHandler doDepositTransaction
-INFO: The transaction of deposit with amount of 3000 is done successfully!
-Jul 20, 2016 4:38:14 PM ir.dotin.server.business.ServerHandler run
-SEVERE: Connection reset
-Jul 20, 2016 4:38:18 PM ir.dotin.server.business.ServerHandler doDepositTransaction
-INFO: The transaction of deposit with amount of 3000 is done successfully!
-Jul 20, 2016 4:38:18 PM ir.dotin.server.business.ServerHandler run
-SEVERE: Connection reset

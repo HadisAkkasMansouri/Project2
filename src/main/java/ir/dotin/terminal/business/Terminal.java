@@ -1,6 +1,6 @@
 package ir.dotin.terminal.business;
 
-import ir.dotin.bean.Transaction;
+import ir.dotin.shared.Transaction;
 
 import java.util.List;
 

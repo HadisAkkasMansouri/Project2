@@ -1,8 +1,8 @@
-package ir.dotin.bean;
+package ir.dotin.server.business;
 
 import java.io.Serializable;
 
-public class Deposite implements Serializable {
+public class Deposit implements Serializable {
 
     private String name;
     private int id;

@@ -1,4 +1,4 @@
-package ir.dotin.bean;
+package ir.dotin.shared;
 
 public enum TransactionType {
 

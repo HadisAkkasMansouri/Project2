@@ -1,7 +1,6 @@
-package ir.dotin.bean;
+package ir.dotin.shared;
 
 import java.io.Serializable;
-import java.util.List;
 
 public class Transaction implements Serializable{
 
@@ -9,7 +8,7 @@ public class Transaction implements Serializable{
     private String transactionType;
     private int amount;
     private int depositId;
-    private String responseCode;
+    private ResponseType responsetype;
 
 
     public int getTransactionId() {
@@ -44,12 +43,12 @@ public class Transaction implements Serializable{
         this.depositId = depositId;
     }
 
-    public String getResponseCode(){
-        return responseCode;
+    public ResponseType getResponseType(){
+        return responsetype;
     }
 
-    public void setResponseCode(String responseCode){
-        this.responseCode = responseCode;
+    public void setResponseType(ResponseType responsetype){
+        this.responsetype = responsetype;
     }
 
     @Override
