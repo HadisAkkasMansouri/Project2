@@ -13,28 +13,24 @@ public class MultiThreadServer implements Runnable{
 
     Logger logger = Logger.getLogger("Log");
     ServerHandler serverHandler = new ServerHandler();
-    Server server = new Server();
-
+    private List<Deposit> depositList;
     Socket serverSocket;
-    MultiThreadServer(Socket serverSocket, List<Deposit> deposits){
+
+    public MultiThreadServer(Socket serverSocket, List<Deposit> deposits){
         this.serverSocket = serverSocket;
+        this.depositList = deposits;
     }
 
     @Override
     public void run() {
 
         String port = serverHandler.readPortFromFile();
-        ServerSocket serverSocket;
-        ObjectInputStream inputStream = null;
-        ObjectOutputStream outputStream = null;
-        Socket socket = null;
-
         try {
-            serverSocket = new ServerSocket(Integer.valueOf(port));
+            ServerSocket serverSocket = new ServerSocket(Integer.valueOf(port));
             logger.info("Server is Listening on the port : " + port);
-            socket = serverSocket.accept();
-            inputStream = new ObjectInputStream(socket.getInputStream());
-            outputStream = new ObjectOutputStream(socket.getOutputStream());
+            Socket socket = serverSocket.accept();
+            ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
+            ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
             while (true) {
                 try {
                     ResponseTransaction responseTransaction = serverHandler.receiveFromClient(inputStream);
@@ -60,15 +56,16 @@ public class MultiThreadServer implements Runnable{
 
         Logger logger = Logger.getLogger("ServerLog");
         ServerHandler serverHandler = new ServerHandler();
-        MultiThreadServer multiThreadServer = new MultiThreadServer();
-        new Thread(multiThreadServer).start();
+        List<Deposit> depositList = serverHandler.readJSONFile();
+//        MultiThreadServer multiThreadServer = new MultiThreadServer();
+//        new Thread(multiThreadServer).start();
 
         String port = serverHandler.readPortFromFile();
         ServerSocket serverSocket = new ServerSocket(Integer.valueOf(port));
         while (true){
             Socket socket = serverSocket.accept();
             logger.info(":D Hello++++++++++++server is connected++++++++++++");
-//            new Thread(new MultiThreadServer(socket,)).start();
+            new Thread(new MultiThreadServer(socket, depositList)).start();
         }
     }
 }
