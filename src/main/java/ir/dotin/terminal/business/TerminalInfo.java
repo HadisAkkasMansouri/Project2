@@ -114,10 +114,6 @@ public class TerminalInfo {
         return outLogPath;
     }
 
-    public void setOutLogPath(String outLogPath) {
-        this.outLogPath = outLogPath;
-    }
-
     public List<Transaction> getTransactionList(){
         return transactionList;
     }
