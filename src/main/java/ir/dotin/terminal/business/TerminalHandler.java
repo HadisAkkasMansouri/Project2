@@ -79,7 +79,7 @@ public class TerminalHandler implements Runnable {
             DOMSource source = new DOMSource(document);
             StreamResult result_Path = new StreamResult(new File("src\\main\\resources\\response.xml"));
             transformer.transform(source, result_Path);
-            logger.info("Response file is generated!");
+//            logger.info("Response file is generated!");
 
         } catch (Exception e) {
             e.printStackTrace();
