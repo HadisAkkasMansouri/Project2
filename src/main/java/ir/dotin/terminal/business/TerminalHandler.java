@@ -1,15 +1,12 @@
 package ir.dotin.terminal.business;
 
-import com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl;
 import ir.dotin.server.business.ResponseTransaction;
 import ir.dotin.shared.ResponseType;
 import ir.dotin.shared.Transaction;
 import org.w3c.dom.*;
-import org.xml.sax.SAXException;
 import javax.xml.transform.Transformer;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
@@ -25,64 +22,11 @@ public class TerminalHandler implements Runnable {
 
     Logger logger = Logger.getLogger("Terminal Side");
     Terminal terminal = new Terminal();
-    private final static String terminal_Path = "terminal.xml";
-
-    public Terminal readXMLFile() {
-
-        String outLog = null;
-        try {
-            List<Transaction> transactions = new ArrayList<>();
-            File xmlfile = new File(terminal_Path);
-            DocumentBuilderFactory dbfactory = DocumentBuilderFactoryImpl.newInstance();
-            DocumentBuilder dBuilder = dbfactory.newDocumentBuilder();
-            Document document = dBuilder.parse(xmlfile);
-            document.getDocumentElement().normalize();
-            Element element = document.getDocumentElement();
-            terminal.setId(Integer.parseInt(element.getAttribute("id")));
-            terminal.setType(element.getAttribute("type"));
-            NodeList nodeList = element.getChildNodes();
-            for (int i = 0; i < nodeList.getLength(); i++) {
-                Node node = nodeList.item(i);
-                String nodeName = node.getNodeName();
-                if (nodeName.equals("server")) {
-                    terminal.setIp(node.getAttributes().getNamedItem("ip").getTextContent());
-                    terminal.setPort(node.getAttributes().getNamedItem("port").getTextContent());
-                }
-
-                if (nodeName.equals("outLog")) {
-                    outLog = String.valueOf((node.getAttributes().getNamedItem("path")));
-                } else if (nodeName.equals("transactions")) {
-                    NodeList childNode = node.getChildNodes();
-                    for (int j = 0; j < childNode.getLength(); j++) {
-                        Node nodeChild = childNode.item(j);
-                        String nodeChildName = nodeChild.getNodeName();
-                        if (nodeChildName.equals("transaction")) {
-                            Transaction transaction = new Transaction();
-                            transaction.setTransactionId(Integer.parseInt(nodeChild.getAttributes().getNamedItem("id").getTextContent()));
-                            transaction.setTransactionType((nodeChild.getAttributes().getNamedItem("type").getTextContent()));
-                            transaction.setAmount(Integer.parseInt(nodeChild.getAttributes().getNamedItem("amount").getTextContent()));
-                            transaction.setDepositId(Integer.parseInt(nodeChild.getAttributes().getNamedItem("deposit").getTextContent()));
-                            transactions.add(transaction);
-                        }
-                    }
-                }
-            }
-            terminal.setTransactionList(transactions);
-            return terminal;
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 
     @Override
     public void run() {
-        String ip = terminal.getIp();
-        String port = terminal.getPort();
+        String ip = TerminalInfo.fromXML().getIp();
+        String port = TerminalInfo.fromXML().getPort();
         List<ResponseTransaction> responseTransactions = new ArrayList<>();
         List<Transaction> transactions = new ArrayList<>();
 
@@ -93,7 +37,7 @@ public class TerminalHandler implements Runnable {
             ObjectInputStream inputStream = null;
             outputStream = new ObjectOutputStream(socket.getOutputStream());
             inputStream = new ObjectInputStream(socket.getInputStream());
-            for (Transaction transaction : terminal.getTransactionList()) {
+            for (Transaction transaction : TerminalInfo.fromXML().getTransactionList()) {
                 outputStream.writeObject(transaction);
                 logger.info("++++++++++++Request is sent++++++++++++");
                 outputStream.flush();
@@ -180,7 +124,7 @@ public class TerminalHandler implements Runnable {
         element.appendChild(responseCode);
 
         Element description = document.createElement("description");
-        description.appendChild(document.createTextNode(responseTransaction.getdescription()));
+        description.appendChild(document.createTextNode(responseTransaction.getResponseType().getDescription()));
         element.appendChild(description);
         return element;
     }
