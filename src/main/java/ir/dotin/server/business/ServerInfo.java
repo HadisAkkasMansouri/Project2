@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 public class ServerInfo {
-    private long port;
+    private int port;
     private String outLog;
 
     private List<Deposit> deposits;
@@ -26,7 +26,7 @@ public class ServerInfo {
         JSONParser jsonParser = new JSONParser();
         try {
             JSONObject jsonObject = (JSONObject) jsonParser.parse(new FileReader(core_path));
-            result.port = (Long) jsonObject.get("port");
+            result.port = (int) (long) jsonObject.get("port");
             result.outLog = (String) jsonObject.get("outLog");
             result.deposits = readDepositsFromJson(jsonObject);
         } catch (ParseException e) {
@@ -65,7 +65,7 @@ public class ServerInfo {
         return new ArrayList<>();
     }
 
-    public long getPort() {
+    public int getPort() {
         return port;
     }
 

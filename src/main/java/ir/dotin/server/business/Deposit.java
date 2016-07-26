@@ -1,5 +1,7 @@
 package ir.dotin.server.business;
 
+import ir.dotin.shared.ResponseType;
+import ir.dotin.shared.Transaction;
 import java.io.Serializable;
 
 public class Deposit implements Serializable {
@@ -39,5 +41,19 @@ public class Deposit implements Serializable {
 
     public void setUpperBound(int upperBound) {
         this.upperBound = upperBound;
+    }
+
+    public ResponseTransaction doWithdrawTransaction(Transaction transaction) {
+        int withdrawamount = getInitalBalance() - transaction.getAmount();
+        setInitalBalance(withdrawamount);
+        ResponseTransaction responseTransaction = new ResponseTransaction(transaction.getTransactionId(), ResponseType.SUCCESS);
+        return responseTransaction;
+    }
+
+    public ResponseTransaction doDepositTransaction(Transaction transaction) {
+        int depositAmount = getInitalBalance() + transaction.getAmount();
+        setInitalBalance(depositAmount);
+        ResponseTransaction responseTransaction = new ResponseTransaction(transaction.getTransactionId(),ResponseType.SUCCESS);
+        return responseTransaction;
     }
 }

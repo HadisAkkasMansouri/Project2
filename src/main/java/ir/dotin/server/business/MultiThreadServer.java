@@ -1,42 +1,38 @@
 package ir.dotin.server.business;
 
-import java.io.*;
-import java.net.ServerSocket;
+import ir.dotin.shared.Transaction;
+
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.List;
-import java.util.logging.FileHandler;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
 public class MultiThreadServer implements Runnable{
 
-    ServerInfo serverInfo = ServerInfo.fromJson();
-    Logger logger = Logger.getLogger("Log");
-    ServerHandler serverHandler = new ServerHandler();
-    private List<Deposit> depositList;
-    Socket serverSocket;
+    private Logger logger = Logger.getLogger("Log");
+    private ServerHandler serverHandler = new ServerHandler();
+    private Socket socket;
+    private ServerInfo serverInfo;
 
-//    public MultiThreadServer(Socket serverSocket, List<Deposit> deposits){
-//        this.serverSocket = serverSocket;
-//        this.depositList = deposits;
-//    }
+    public MultiThreadServer(Socket serverSocket, ServerInfo serverInfo){
+        this.socket = serverSocket;
+        this.serverInfo = serverInfo;
+    }
 
     @Override
     public void run() {
-
-        long port = serverInfo.getPort();
         try {
-            ServerSocket serverSocket = new ServerSocket((int)port);
-            logger.info("Server is Listening on the port : " + port);
-            Socket socket = serverSocket.accept();
             ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
             ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
             while (true) {
                 try {
-                    ResponseTransaction responseTransaction = serverHandler.receiveFromClient(inputStream);
+                    Transaction transaction = serverHandler.readNextTransaction(inputStream);
+                    ResponseTransaction responseTransaction = transaction.perform();
                     serverHandler.sendToClient(outputStream, responseTransaction);
                 } catch (EOFException e) {
-                    logger.info("connection closed !");
+                    logger.warning("No more data from client!");
                     break;
                 } catch (ClassNotFoundException e) {
                     e.printStackTrace();
@@ -52,27 +48,4 @@ public class MultiThreadServer implements Runnable{
     }
 
 
-    public static void main(String args[]) throws IOException {
-
-//        ServerInfo serverInfo = ServerInfo.fromJson("core.json");
-
-        FileHandler fileHandler;
-        Logger logger = Logger.getLogger("ServerLog");
-        ServerHandler serverHandler = new ServerHandler();
-//        List<Deposit> depositList = serverInfo.getDeposits();
-        MultiThreadServer multiThreadServer = new MultiThreadServer();
-        new Thread(multiThreadServer).start();
-
-//        fileHandler = new FileHandler("src\\main\\resources\\outLog");
-//        logger.addHandler(fileHandler);
-//        SimpleFormatter formatter = new SimpleFormatter();
-//        fileHandler.setFormatter(formatter);
-//        String port = serverHandler.readPortFromFile();
-//        ServerSocket serverSocket = new ServerSocket(Integer.valueOf(port));
-//        while (true){
-//            Socket socket = serverSocket.accept();
-//            logger.info(":D Hello++++++++++++server is connected++++++++++++");
-//            new Thread(new MultiThreadServer(socket, depositList)).start();
-//        }
-    }
 }
