@@ -1,11 +1,9 @@
 package ir.dotin.server.business;
 
 import ir.dotin.shared.Transaction;
-
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.List;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
