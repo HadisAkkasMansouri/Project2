@@ -67,13 +67,14 @@ public class Transaction implements Serializable {
     }
 
     public ResponseTransaction perform() {
-        List<Deposit> depositList = serverInfo.getDeposits();
-        if ((!getTransactionType().equalsIgnoreCase(TransactionType.DEPOSIT.toString())) && (!getTransactionType().equalsIgnoreCase(TransactionType.WITHDRAW.toString()))){
+
+            List<Deposit> depositList = serverInfo.getDeposits();
+            if ((!getTransactionType().equalsIgnoreCase(TransactionType.DEPOSIT.toString())) && (!getTransactionType().equalsIgnoreCase(TransactionType.WITHDRAW.toString()))) {
 //                    logger.warning("The Transaction of" + this + "is invalid..");
 //                    throw new InvalidReceivedDataException("Invalid transaction type!");
-                    return new ResponseTransaction(getTransactionId(), ResponseType.INVALID_TRANSACTION);
-                }
-        for (Deposit deposit : depositList) {
+                return new ResponseTransaction(getTransactionId(), ResponseType.INVALID_TRANSACTION);
+            }
+            for (Deposit deposit : depositList) {
                 if (getDepositId() == deposit.getId()) {
                     if (getTransactionType().equalsIgnoreCase(TransactionType.DEPOSIT.toString())) {
                         if (validateDeposit(deposit)) {
@@ -86,14 +87,14 @@ public class Transaction implements Serializable {
                         if (validateWithdraw(deposit)) {
                             return deposit.doWithdrawTransaction(this);
                         } else {
-    //                      throw InadequateInitialBalanceException("Not enough balance!");
+                            //                      throw InadequateInitialBalanceException("Not enough balance!");
                             return new ResponseTransaction(getTransactionId(), ResponseType.INADEQUATE_AMOUNT);
                         }
                     }
                 }
             }
 
-        return new ResponseTransaction(getTransactionId(), ResponseType.UNDEFINED_DEPOSIT);
+            return new ResponseTransaction(getTransactionId(), ResponseType.UNDEFINED_DEPOSIT);
     }
 
     public boolean validateDeposit(Deposit deposit) {
