@@ -1,20 +1,14 @@
 package ir.dotin.shared;
 
-import ir.dotin.exception.InadequateInitialBalanceException;
-import ir.dotin.exception.InvalidReceivedDataException;
-import ir.dotin.exception.ViolatedUpperBoundException;
 import ir.dotin.server.business.Deposit;
 import ir.dotin.server.business.ResponseTransaction;
 import ir.dotin.server.business.ServerInfo;
-
 import java.io.Serializable;
 import java.util.List;
-import java.util.logging.Logger;
 
 public class Transaction implements Serializable {
 
     private static ServerInfo serverInfo;
-//    private Logger logger = Logger.getLogger("TransactionLog");
 
     public static void initialize(ServerInfo serverInfo) {
         Transaction.serverInfo = serverInfo;
@@ -68,6 +62,7 @@ public class Transaction implements Serializable {
 
     public ResponseTransaction perform() {
 
+        synchronized (this) {
             List<Deposit> depositList = serverInfo.getDeposits();
             if ((!getTransactionType().equalsIgnoreCase(TransactionType.DEPOSIT.toString())) && (!getTransactionType().equalsIgnoreCase(TransactionType.WITHDRAW.toString()))) {
 //                    logger.warning("The Transaction of" + this + "is invalid..");
@@ -95,14 +90,19 @@ public class Transaction implements Serializable {
             }
 
             return new ResponseTransaction(getTransactionId(), ResponseType.UNDEFINED_DEPOSIT);
+        }
     }
 
     public boolean validateDeposit(Deposit deposit) {
-        return getAmount() + deposit.getInitalBalance() <= deposit.getUpperBound();
+        synchronized (this) {
+            return getAmount() + deposit.getInitalBalance() <= deposit.getUpperBound();
+        }
     }
 
     public boolean validateWithdraw(Deposit deposit) {
-        return getAmount() <= deposit.getInitalBalance();
+        synchronized (this) {
+            return getAmount() <= deposit.getInitalBalance();
+        }
     }
 
 }
